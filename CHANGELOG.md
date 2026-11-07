@@ -200,8 +200,8 @@ QQ 的 `set_group_ban` 单次上限就是 **30 天**，之前插件把 365 天�
 `group manager` / `group admin`，因此本版起统一改名：
 
 - 展示名 `display_name`：`ZM-QQManager` → **`ZM-QQGroupmgr`**
-- 插件标识符 `name`：`astrbot_plugin_zm_qqmanager` → **`astrbot_plugin_zm_qqgroupmgr`**
-- GitHub 仓库：`astrbot_plugin_zm_qqmanager` → **`astrbot_plugin_zm_qqgroupmgr`**
+- 插件标识符 `name`：`astrbot_plugin_zm_qqmanager` → **`astrbot_plugin_qqgroupmgr`**
+- GitHub 仓库：`astrbot_plugin_zm_qqmanager` → **`astrbot_plugin_qqgroupmgr`**
   （旧地址由 GitHub 自动跳转，已有 clone 仍可用）
 
 > **升级提示**: 插件标识符变了，AstrBot 会把它识别为一个新插件，升级后请到插件

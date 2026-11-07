@@ -166,39 +166,4 @@ async def _fetch_latest_sha(repo: str) -> Tuple[str, str]:
     return sha, ""
 
 
-async def latest_release_tag(repo: str) -> Tuple[str, str]:
-    """取仓库最新 release 的 tag（去掉前缀 v），返回 ``(版本号, 错误)``。"""
-    try:
-        import aiohttp
-    except ImportError:
-        return "", "缺少 aiohttp 依赖"
 
-    url = f"https://api.github.com/repos/{repo}/releases/latest"
-    headers = {
-        "Accept": "application/vnd.github+json",
-        "User-Agent": "ZM-QQGroupmgr",
-    }
-    try:
-        timeout = aiohttp.ClientTimeout(total=20)
-        async with aiohttp.ClientSession(timeout=timeout) as session:
-            async with session.get(url, headers=headers) as response:
-                if response.status != 200:
-                    return "", f"GitHub 返回 HTTP {response.status}"
-                payload = await response.json(content_type=None)
-    except Exception as exc:
-        return "", f"查询最新版本失败: {exc}"
-
-    tag = str((payload or {}).get("tag_name") or "").strip()
-    if not tag:
-        return "", "最新 release 没有 tag"
-    return tag.lstrip("vV"), ""
-
-
-def version_tuple(text: str) -> tuple:
-    """把 ``1.0.6`` 解析成可比较的元组，非数字段按 0 处理。"""
-    parts = re.split(r"[.\-+]", str(text or "").strip().lstrip("vV"))
-    numbers = []
-    for part in parts:
-        match = re.match(r"^(\d+)", part)
-        numbers.append(int(match.group(1)) if match else 0)
-    return tuple(numbers) or (0,)

@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/ZomebieMask/astrbot_plugin_zm_qqgroupmgr/main/logo.png" width="110" alt="ZM-QQGroupmgr" />
+<img src="https://raw.githubusercontent.com/ZomebieMask/astrbot_plugin_qqgroupmgr/main/logo.png" width="110" alt="ZM-QQGroupmgr" />
 
 # ZM-QQGroupmgr
 
@@ -8,18 +8,18 @@
 
 **33 组指令 · 12 大模块 · 从禁言踢人到进群审批、问题反馈、敏感词、刷屏、广告、文件分发、跨群批量操作，一站装完**
 
-[![version](https://img.shields.io/badge/version-1.0.8-blue?style=flat-square)](https://github.com/ZomebieMask/astrbot_plugin_zm_qqgroupmgr/releases)
+[![version](https://img.shields.io/badge/version-1.0.8-blue?style=flat-square)](https://github.com/ZomebieMask/astrbot_plugin_qqgroupmgr/releases)
 [![AstrBot](https://img.shields.io/badge/AstrBot-%E2%89%A53.4.0-7B68EE?style=flat-square)](https://astrbot.app)
 [![platform](https://img.shields.io/badge/platform-aiocqhttp%20%7C%20nakuru-32CD32?style=flat-square)](https://docs.astrbot.app)
-[![license](https://img.shields.io/badge/license-MIT-green?style=flat-square)](https://github.com/ZomebieMask/astrbot_plugin_zm_qqgroupmgr/blob/main/LICENSE)
-[![stars](https://img.shields.io/github/stars/ZomebieMask/astrbot_plugin_zm_qqgroupmgr?style=flat-square&color=FFD700)](https://github.com/ZomebieMask/astrbot_plugin_zm_qqgroupmgr/stargazers)
+[![license](https://img.shields.io/badge/license-MIT-green?style=flat-square)](https://github.com/ZomebieMask/astrbot_plugin_qqgroupmgr/blob/main/LICENSE)
+[![stars](https://img.shields.io/github/stars/ZomebieMask/astrbot_plugin_qqgroupmgr?style=flat-square&color=FFD700)](https://github.com/ZomebieMask/astrbot_plugin_qqgroupmgr/stargazers)
 
 <!-- 导航用完整地址：README 会被 AstrBot 插件市场等站点二次渲染，纯 #锚点在那边点不动 -->
-[快速开始](https://github.com/ZomebieMask/astrbot_plugin_zm_qqgroupmgr#-快速开始) ·
-[功能总览](https://github.com/ZomebieMask/astrbot_plugin_zm_qqgroupmgr#-一眼看懂它能干什么) ·
-[指令手册](https://github.com/ZomebieMask/astrbot_plugin_zm_qqgroupmgr#-指令手册) ·
-[配置项](https://github.com/ZomebieMask/astrbot_plugin_zm_qqgroupmgr#️-配置项) ·
-[常见问题](https://github.com/ZomebieMask/astrbot_plugin_zm_qqgroupmgr#-常见问题)
+[快速开始](https://github.com/ZomebieMask/astrbot_plugin_qqgroupmgr#-快速开始) ·
+[功能总览](https://github.com/ZomebieMask/astrbot_plugin_qqgroupmgr#-一眼看懂它能干什么) ·
+[指令手册](https://github.com/ZomebieMask/astrbot_plugin_qqgroupmgr#-指令手册) ·
+[配置项](https://github.com/ZomebieMask/astrbot_plugin_qqgroupmgr#️-配置项) ·
+[常见问题](https://github.com/ZomebieMask/astrbot_plugin_qqgroupmgr#-常见问题)
 
 </div>
 
@@ -117,7 +117,7 @@ AstrBot WebUI → 插件市场 → 搜 `ZM-QQGroupmgr` → 安装
 
 ```bash
 cd /path/to/astrbot/data/plugins
-git clone https://github.com/ZomebieMask/astrbot_plugin_zm_qqgroupmgr.git
+git clone https://github.com/ZomebieMask/astrbot_plugin_qqgroupmgr.git
 ```
 
 </td><td width="50%" valign="top">
@@ -600,7 +600,7 @@ QQ 侧限制：群专属头衔通常**只有群主**能设置，机器人只是�
 
 ## 🔗 相关链接
 
-[AstrBot 官网](https://astrbot.app) · [开发文档](https://docs.astrbot.app) · [插件市场](https://cloud.astrbot.app/market) · [更新日志](https://github.com/ZomebieMask/astrbot_plugin_zm_qqgroupmgr/blob/main/CHANGELOG.md) · [提交 Issue](https://github.com/ZomebieMask/astrbot_plugin_zm_qqgroupmgr/issues)
+[AstrBot 官网](https://astrbot.app) · [开发文档](https://docs.astrbot.app) · [插件市场](https://cloud.astrbot.app/market) · [更新日志](https://github.com/ZomebieMask/astrbot_plugin_qqgroupmgr/blob/main/CHANGELOG.md) · [提交 Issue](https://github.com/ZomebieMask/astrbot_plugin_qqgroupmgr/issues)
 
 ## 📄 开源协议
 
@@ -614,6 +614,6 @@ QQ 侧限制：群专属头衔通常**只有群主**能设置，机器人只是�
 
 **觉得好用的话，点个 ⭐ Star 让更多人看到**
 
-[![Star History Chart](https://api.star-history.com/svg?repos=ZomebieMask/astrbot_plugin_zm_qqgroupmgr&type=Date)](https://star-history.com/#ZomebieMask/astrbot_plugin_zm_qqgroupmgr&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=ZomebieMask/astrbot_plugin_qqgroupmgr&type=Date)](https://star-history.com/#ZomebieMask/astrbot_plugin_qqgroupmgr&Date)
 
 </div>

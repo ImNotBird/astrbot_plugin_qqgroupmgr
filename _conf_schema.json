@@ -217,17 +217,7 @@
     "type": "string",
     "default": "收到 :)"
   },
-  "update_check_days": {
-    "description": "检查插件新版本的间隔（天）",
-    "hint": "查到新版本会在开启 /update on 的群里提示一次，默认 5 天，最大 30",
-    "type": "int",
-    "default": 5
-  },
-  "update_tip": {
-    "description": "更新提示内容，占位符：{version} 最新版本号",
-    "type": "text",
-    "default": "zm_qqgroupmgr插件有新的版本可更新!\nhttps://cloud.astrbot.app/plugin/ZomebieMask/astrbot_plugin_zm_qqgroupmgr"
-  },
+
   "report_remind_enabled": {
     "description": "是否定时提醒未解决的问题报告",
     "hint": "开启后每隔 report_remind_minutes 分钟，在还有未解决 /report 的群里列出未解决问题的编号、内容与报告人 QQ。这里是默认值，群内用过 /rmd 的以群内设置为准",

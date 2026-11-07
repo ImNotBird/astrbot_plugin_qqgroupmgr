@@ -146,7 +146,7 @@ def test_entry_path(main):
 
 
 def test_join_approval():
-    """验证码生成与比对、仓库解析、版本比较。"""
+    """验证码生成与比对、仓库解析。"""
     ja = sys.modules["zmplugin.core.joinapproval"]
 
     assert ja.make_code("number", 4).isdigit() and len(ja.make_code("number", 4)) == 4
@@ -174,20 +174,16 @@ def test_join_approval():
     assert not ja.code_matches(sha, sha + "0", is_sha=True), "比期望更长不该通过"
 
     for text in (
-        "https://github.com/ZomebieMask/astrbot_plugin_zm_qqgroupmgr",
-        "http://www.github.com/ZomebieMask/astrbot_plugin_zm_qqgroupmgr.git",
-        "github.com/ZomebieMask/astrbot_plugin_zm_qqgroupmgr/",
-        "ZomebieMask/astrbot_plugin_zm_qqgroupmgr",
+        "https://github.com/ZomebieMask/astrbot_plugin_qqgroupmgr",
+        "http://www.github.com/ZomebieMask/astrbot_plugin_qqgroupmgr.git",
+        "github.com/ZomebieMask/astrbot_plugin_qqgroupmgr/",
+        "ZomebieMask/astrbot_plugin_qqgroupmgr",
     ):
-        assert ja.parse_repo(text) == "ZomebieMask/astrbot_plugin_zm_qqgroupmgr", text
+        assert ja.parse_repo(text) == "ZomebieMask/astrbot_plugin_qqgroupmgr", text
     for bad in ("", "随便一句话", "https://gitee.com/a/b", "https://github.com/onlyowner"):
         assert ja.parse_repo(bad) is None, bad
 
-    assert ja.version_tuple("v1.0.6") > ja.version_tuple("1.0.5")
-    assert ja.version_tuple("1.0.10") > ja.version_tuple("1.0.9")
-    assert ja.version_tuple("1.0.6") == ja.version_tuple("1.0.6")
-    assert ja.version_tuple("1.1.0-beta") > ja.version_tuple("1.0.99")
-    print("  进群审批: 验证码 / sha 前缀 / 仓库解析 / 版本比较 OK")
+    print("  进群审批: 验证码 / sha 前缀 / 仓库解析 OK")
 
 
 def test_sha_reverify(main):

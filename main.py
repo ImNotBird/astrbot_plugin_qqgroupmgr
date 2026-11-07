@@ -47,10 +47,8 @@ from .core.joinapproval import (
     ShaCache,
     code_matches,
     is_sha_text,
-    latest_release_tag,
     make_code,
     parse_repo,
-    version_tuple,
 )
 from .core.mutes import MuteTracker, chunk_duration
 from .core.onebot import OneBotApi, forward_node, resolve_member_name
@@ -98,12 +96,7 @@ from .core.utils import (
 PLUGIN_NAME = "ZM-QQGroupmgr"
 PLUGIN_VERSION = "1.0.8"
 
-# 版本检查与更新提示指向的仓库
-PLUGIN_REPO = "ZomebieMask/astrbot_plugin_zm_qqgroupmgr"
-PLUGIN_MARKET_URL = (
-    "https://cloud.astrbot.app/plugin/ZomebieMask/astrbot_plugin_zm_qqgroupmgr"
-)
-UPDATE_CARD_TITLE = "ZM_QQGroupmgr New-Update-Available!!!"
+
 
 # GitHub 未认证 API 每小时只有 60 次，默认半小时查一次足够
 DEFAULT_POLL_MINUTES = 30
@@ -225,9 +218,7 @@ DEFAULT_JOIN_SHA_TIP = (
 )
 DEFAULT_JOIN_PASS_TIP = "{at} 验证通过，欢迎 :)"
 DEFAULT_JOIN_TIMEOUT_TIP = "{name}（{user_id}）未在 {minutes} 分钟内完成验证，已移出本群"
-DEFAULT_UPDATE_TIP = (
-    "zm_qqgroupmgr插件有新的版本可更新!\n" + PLUGIN_MARKET_URL
-)
+
 
 YES_WORDS = {"是", "yes", "y", "要", "需要", "有", "1", "true", "好", "嗯"}
 NO_WORDS = {"否", "no", "n", "不", "不要", "不需要", "没有", "0", "false", "算了"}
@@ -260,8 +251,8 @@ def _find_slime_chunks(seed: int, search_range: int) -> List[tuple]:
     return found
 
 
-@register("astrbot_plugin_zm_qqgroupmgr", "ZM", "功能全面的 QQ 群管理插件", PLUGIN_VERSION,
-          "https://github.com/ZomebieMask/astrbot_plugin_zm_qqgroupmgr")
+@register("astrbot_plugin_qqgroupmgr", "ZM", "功能全面的 QQ 群管理插件", PLUGIN_VERSION,
+          "https://github.com/ZomebieMask/astrbot_plugin_qqgroupmgr")
 class ZMQQGroupmgr(Star):
     """群管理插件主体。"""
 
@@ -629,14 +620,13 @@ class ZMQQGroupmgr(Star):
         return max(1, min(value, MAX_POLL_MINUTES))
 
     async def _ticker(self) -> None:
-        """一个循环干五件事，省掉五套定时器。
+        """一个循环干四件事，省掉四套定时器。
 
         ponytail: 60 秒粒度的轮询，够用；要秒级精度再改成每条记录一个定时器。
         """
         jobs = (
             self._renew_long_mutes,
             self._refresh_dynamic_answers,
-            self._check_update,
             self._remind_reports,
             self._settle_draws,
         )
@@ -724,55 +714,6 @@ class ZMQQGroupmgr(Star):
             await self.settings.save()
             logger.info(f"[ZM-QQGroupmgr] 群 {group_id} 加群答案已更新为 {sha[:7]}")
 
-    async def _check_update(self) -> None:
-        """按配置的天数查一次最新 release，有新版本就在开了 /update on 的群里说一声。"""
-        days = max(1, min(coerce_int(self.config.get("update_check_days"), 5), 30))
-        meta = self._meta()
-        now = int(time.time())
-        if now - int(meta.get("update_checked_at") or 0) < days * 86400:
-            return
-        meta["update_checked_at"] = now
-        await self.settings.save()
-
-        latest, error = await latest_release_tag(PLUGIN_REPO)
-        if not latest:
-            logger.debug(f"[ZM-QQGroupmgr] 版本检查失败: {error}")
-            return
-        if version_tuple(latest) <= version_tuple(PLUGIN_VERSION):
-            return
-        # 同一个新版本只提示一次，别每 5 天刷一遍
-        if meta.get("update_notified") == latest:
-            return
-
-        api = self._bg_api()
-        if api is None:
-            return
-        groups = [str(item.get("group_id")) for item in await api.group_list()]
-        text = str(self.config.get("update_tip") or DEFAULT_UPDATE_TIP).replace(
-            "{version}", latest
-        )
-        login = await api.try_call("get_login_info") or {}
-        bot_id = str(login.get("user_id") or "10000")
-        sent = 0
-        for group_id in groups:
-            if not group_id or not self._update_notify_enabled(group_id):
-                continue
-            result = await api.send_forward(
-                int(group_id),
-                [forward_node(bot_id, UPDATE_CARD_TITLE, text)],
-                source=UPDATE_CARD_TITLE,
-                news=[{"text": f"v{latest} 已发布"}],
-                summary="查看 1 条转发消息",
-                prompt=f"[{UPDATE_CARD_TITLE}]",
-            )
-            if result is None:
-                await api.send_group_msg(int(group_id), text)
-            sent += 1
-            await asyncio.sleep(BATCH_INTERVAL)
-
-        meta["update_notified"] = latest
-        await self.settings.save()
-        logger.info(f"[ZM-QQGroupmgr] 发现新版本 v{latest}，已在 {sent} 个群提示")
 
     async def _remind_reports(self) -> None:
         """每 report_remind_minutes 分钟，在还有未解决报告且开着提醒的群里列一遍。"""
@@ -936,34 +877,6 @@ class ZMQQGroupmgr(Star):
         """没用过 /rmd 的群是否提醒未解决的报告，听插件配置的。"""
         return bool(self.config.get("report_remind_enabled", True))
 
-    def _update_notify_enabled(self, group_id: str) -> bool:
-        """/update 开关，默认开启。"""
-        return self._group_flag(group_id, "update_notify")
-
-    @filter.permission_type(filter.PermissionType.ADMIN)
-    @filter.command("update")
-    async def cmd_update(self, event: AstrMessageEvent):
-        """/update on|off - 本群是否接收插件更新提示"""
-        group_id = self._require_group(event)
-        if not group_id:
-            yield event.plain_result(ADMIN_ONLY)
-            return
-
-        args = self._args(event, "update")
-        action = args[0].lower() if args else ""
-        if action not in {"on", "off"}:
-            state = "开启" if self._update_notify_enabled(group_id) else "关闭"
-            days = max(1, min(coerce_int(self.config.get("update_check_days"), 5), 30))
-            yield event.plain_result(
-                f"用法: /update on|off\n当前状态: {state}（每 {days} 天检查一次新版本）"
-            )
-            return
-
-        self.settings.group(group_id)["update_notify"] = action == "on"
-        await self.settings.save()
-        yield event.plain_result(
-            "已开启更新通知，有新版本时会在本群提示" if action == "on" else "已关闭本群的更新通知"
-        )
 
     # ------------------------------------------------------------------
     # 禁言相关命令
@@ -4372,7 +4285,7 @@ class ZMQQGroupmgr(Star):
             "/merge <标题> <qq> <内容> [...]  构造合并转发，标题即卡片名（全体可用）\n"
             "/kill <成员> <理由>              赛博击杀播报\n"
             "/slimefinder <version> <seed>   史莱姆区块（缩写 /sf，全体可用）\n"
-            "/update on|off                  本群是否接收插件更新提示（默认开）\n"
+
             "/zmhelp                         本帮助（缩写 /群管帮助）\n\n"
             "时长单位: s 秒 / m 分钟 / h 小时 / d 天"
         )
