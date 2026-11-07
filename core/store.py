@@ -11,7 +11,7 @@ from typing import Any, Dict, Optional
 
 from astrbot.api import logger
 
-PLUGIN_DIR_NAME = "ZM-QQGroupmgr"
+PLUGIN_DIR_NAME = "QQGroupmgr"
 # 1.0.5 之前叫 ZM-QQManager，老用户的数据目录还是旧名字，首次运行时整目录改名过来
 LEGACY_DIR_NAMES = ("ZM-QQManager",)
 
@@ -35,11 +35,11 @@ def get_data_dir() -> Path:
                 continue
             try:
                 old.rename(path)
-                logger.info(f"[ZM-QQGroupmgr] 已把数据目录 {legacy} 迁移为 {PLUGIN_DIR_NAME}")
+                logger.info(f"[QQGroupmgr] 已把数据目录 {legacy} 迁移为 {PLUGIN_DIR_NAME}")
             except OSError as exc:
                 # 迁移失败不能让插件起不来，退回继续用旧目录，数据照样在
                 logger.warning(
-                    f"[ZM-QQGroupmgr] 数据目录 {legacy} 迁移失败（{exc}），继续使用旧目录"
+                    f"[QQGroupmgr] 数据目录 {legacy} 迁移失败（{exc}），继续使用旧目录"
                 )
                 old.mkdir(parents=True, exist_ok=True)
                 return old
@@ -76,12 +76,12 @@ def backup_on_upgrade(version: str) -> Optional[str]:
                 shutil.copy2(item, target / item.name)
             made = str(target)
         except OSError as exc:
-            logger.warning(f"[ZM-QQGroupmgr] 升级前备份失败: {exc}")
+            logger.warning(f"[QQGroupmgr] 升级前备份失败: {exc}")
 
     try:
         marker.write_text(version, encoding="utf-8")
     except OSError as exc:
-        logger.warning(f"[ZM-QQGroupmgr] 写入版本标记失败: {exc}")
+        logger.warning(f"[QQGroupmgr] 写入版本标记失败: {exc}")
     return made
 
 
@@ -107,20 +107,20 @@ class JsonStore:
                 raise ValueError("顶层不是 JSON 对象")
             self._data = loaded
         except Exception as exc:
-            logger.error(f"[ZM-QQGroupmgr] 读取 {self.path.name} 失败: {exc}")
+            logger.error(f"[QQGroupmgr] 读取 {self.path.name} 失败: {exc}")
             # 改名留着，否则下一次保存会用空数据覆盖它，手改多打个逗号数据就全没了
             kept = self.path.with_name(f"{self.path.name}.corrupt-{int(time.time())}")
             try:
                 os.replace(self.path, kept)
                 # 必须先停用：插件运行中放回去，会被内存里的空数据覆盖
                 logger.error(
-                    f"[ZM-QQGroupmgr] 原文件已保留为 {kept.name}。恢复方法：先停用插件或关闭 AstrBot，"
+                    f"[QQGroupmgr] 原文件已保留为 {kept.name}。恢复方法：先停用插件或关闭 AstrBot，"
                     f"修好后改回 {self.path.name}（覆盖同名文件），再启用"
                 )
             except OSError as move_exc:
                 self._frozen = True
                 logger.error(
-                    f"[ZM-QQGroupmgr] 保留 {self.path.name} 失败: {move_exc}。"
+                    f"[QQGroupmgr] 保留 {self.path.name} 失败: {move_exc}。"
                     "本次运行不写入该文件，修好后重载插件"
                 )
 
@@ -135,7 +135,7 @@ class JsonStore:
             os.replace(tmp, self.path)
             tmp = None
         except Exception as exc:
-            logger.error(f"[ZM-QQGroupmgr] 写入 {self.path.name} 失败: {exc}")
+            logger.error(f"[QQGroupmgr] 写入 {self.path.name} 失败: {exc}")
         finally:
             # 写失败时别把 .tmp 残留在数据目录里
             if tmp:
@@ -156,7 +156,7 @@ class JsonStore:
         try:
             payload = json.dumps(self._data, ensure_ascii=False, indent=2)
         except Exception as exc:
-            logger.error(f"[ZM-QQGroupmgr] 序列化 {self.path.name} 失败: {exc}")
+            logger.error(f"[QQGroupmgr] 序列化 {self.path.name} 失败: {exc}")
             return
         async with self._lock:
             await asyncio.to_thread(self._write, payload)

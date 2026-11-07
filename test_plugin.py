@@ -1,7 +1,7 @@
 """自检脚本：`python test_plugin.py`（无需 pytest / AstrBot 运行环境）。
 
 只盖两处有分支的逻辑：
-1. `/zmhelp` 菜单 —— 内置菜单、`help_menu_text` 自定义、空白回落、占位符替换
+1. `/groupmgr_help` 菜单 —— 内置菜单、`help_menu_text` 自定义、空白回落、占位符替换
 2. 数据目录迁移 —— 1.0.5 改名后老用户的 `ZM-QQManager` 目录要整体改名过来
 """
 import importlib.util
@@ -99,21 +99,21 @@ def test_data_dir_migration():
         (old / "settings.json").write_text(json.dumps({"k": "v"}), encoding="utf-8")
 
     root, got = run(with_legacy)
-    assert got.name == "ZM-QQGroupmgr", got
+    assert got.name == "QQGroupmgr", got
     assert json.loads((got / "settings.json").read_text(encoding="utf-8")) == {"k": "v"}
     assert not (root / "plugin_data" / "ZM-QQManager").exists(), "旧目录应已改名"
     assert store.get_data_dir() == got, "重复调用应幂等"
 
     _, got = run(lambda plugin_data: plugin_data.mkdir(parents=True))
-    assert got.name == "ZM-QQGroupmgr" and got.is_dir(), "全新安装应直接建新目录"
+    assert got.name == "QQGroupmgr" and got.is_dir(), "全新安装应直接建新目录"
 
     def both(plugin_data):
         (plugin_data / "ZM-QQManager").mkdir(parents=True)
         (plugin_data / "ZM-QQManager" / "a.json").write_text("1", encoding="utf-8")
-        (plugin_data / "ZM-QQGroupmgr").mkdir(parents=True)
+        (plugin_data / "QQGroupmgr").mkdir(parents=True)
 
     root, got = run(both)
-    assert got.name == "ZM-QQGroupmgr"
+    assert got.name == "QQGroupmgr"
     assert (root / "plugin_data" / "ZM-QQManager" / "a.json").exists(), \
         "新目录已存在时不该动旧目录"
 

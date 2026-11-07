@@ -1,14 +1,14 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/ZomebieMask/astrbot_plugin_qqgroupmgr/main/logo.png" width="110" alt="ZM-QQGroupmgr" />
+<img src="https://raw.githubusercontent.com/ZomebieMask/astrbot_plugin_qqgroupmgr/main/logo.png" width="110" alt="QQGroupmgr" />
 
-# ZM-QQGroupmgr
+# QQGroupmgr
 
 ### 一个插件，顶十个 —— AstrBot 全能 QQ 群管理套件
 
 **33 组指令 · 12 大模块 · 从禁言踢人到进群审批、问题反馈、敏感词、刷屏、广告、文件分发、跨群批量操作，一站装完**
 
-[![version](https://img.shields.io/badge/version-1.0.8-blue?style=flat-square)](https://github.com/ZomebieMask/astrbot_plugin_qqgroupmgr/releases)
+[![version](https://img.shields.io/badge/version-1.0.9-blue?style=flat-square)](https://github.com/ZomebieMask/astrbot_plugin_qqgroupmgr/releases)
 [![AstrBot](https://img.shields.io/badge/AstrBot-%E2%89%A53.4.0-7B68EE?style=flat-square)](https://astrbot.app)
 [![platform](https://img.shields.io/badge/platform-aiocqhttp%20%7C%20nakuru-32CD32?style=flat-square)](https://docs.astrbot.app)
 [![license](https://img.shields.io/badge/license-MIT-green?style=flat-square)](https://github.com/ZomebieMask/astrbot_plugin_qqgroupmgr/blob/main/LICENSE)
@@ -45,16 +45,16 @@
 
 <div align="center">
 
-**不用装五个插件拼一套群管。** 装一个，`/zmhelp` 一条条开。
+**不用装五个插件拼一套群管。** 装一个，`/groupmgr_help` 一条条开。
 
 </div>
 
 ---
 
-## 🎯 为什么选 ZM-QQGroupmgr
+## 🎯 为什么选 QQGroupmgr
 
 <table>
-<tr><th width="22%">差异点</th><th width="39%">常见群管插件</th><th width="39%">ZM-QQGroupmgr</th></tr>
+<tr><th width="22%">差异点</th><th width="39%">常见群管插件</th><th width="39%">QQGroupmgr</th></tr>
 
 <tr>
 <td><b>跨群批量</b></td>
@@ -111,7 +111,7 @@
 
 **① 安装（推荐：插件市场）**
 
-AstrBot WebUI → 插件市场 → 搜 `ZM-QQGroupmgr` → 安装
+AstrBot WebUI → 插件市场 → 搜 `QQGroupmgr` → 安装
 
 或用 Git：
 
@@ -129,7 +129,7 @@ git clone https://github.com/ZomebieMask/astrbot_plugin_qqgroupmgr.git
 **③ 开你想要的功能**
 
 ```
-/zmhelp              # 看全部指令
+/groupmgr_help              # 看全部指令
 /sw on 10            # 敏感词，命中禁言 10 分钟
 /antiflood on        # 刷屏检测
 /adban on            # 广告拦截
@@ -470,7 +470,7 @@ git clone https://github.com/ZomebieMask/astrbot_plugin_qqgroupmgr.git
 | `/kill <成员> <理由>` | 赛博击杀：在与该成员的共同群同步播报，提醒管理处理 |
 | `/slimefinder <版本> <种子>`（`/sf`） | Minecraft 史莱姆区块查找 |
 | `/update on\|off` | 本群是否接收插件更新提示，**默认开** |
-| `/zmhelp`（`/群管帮助`） | 全部指令总览。群内以合并转发发送，卡片标题即 `ZM-QQGroupmgr v<版本号>`；菜单内容可在后台 `help_menu_text` 自定义 |
+| `/groupmgr_help`（`/群管帮助`） | 全部指令总览。群内以合并转发发送，卡片标题即 `QQGroupmgr v<版本号>`；菜单内容可在后台 `help_menu_text` 自定义 |
 
 ```
 /merge 对话记录 10001 在吗 10002 不在
@@ -517,7 +517,7 @@ git clone https://github.com/ZomebieMask/astrbot_plugin_qqgroupmgr.git
 | 📮 问题反馈 | `report_remind_enabled`（默认开）`report_remind_minutes`（默认 60）`report_remind_at`（默认开）`report_remind_users`（留空 = 全体群管理）`report_solve_users`（额外可用 `/solve` `/drh` `/rl` `/rclear` `/rsw` `/rmd` 的 QQ） |
 | 🎁 抽奖 | `draw_claim_tip`（开奖时的领奖提示，占位符 `{name}` `{count}`） |
 | 🔔 更新通知 | `update_check_days` `update_tip` |
-| 📜 帮助菜单 | `help_menu_text` —— 留空用内置完整菜单；填写后 `/zmhelp` 只显示你写的内容，支持 `{name}` `{version}` `{cooldown}` 三个占位符 |
+| 📜 帮助菜单 | `help_menu_text` —— 留空用内置完整菜单；填写后 `/groupmgr_help` 只显示你写的内容，支持 `{name}` `{version}` `{cooldown}` 三个占位符 |
 
 ### 🔐 下载服务安全提醒
 
@@ -567,9 +567,9 @@ QQ 侧限制：群专属头衔通常**只有群主**能设置，机器人只是�
 <details>
 <summary><b>数据会丢吗？升级插件要重新配一遍吗？</b></summary>
 
-**不用。** 所有运行数据都存在插件目录之外的 `data/plugin_data/ZM-QQGroupmgr/`（封禁列表、各类文本、开关、自定义敏感词、文件仓库、更新日志、问题报告），后台面板里的配置项由 AstrBot 存在 `data/config/` 下。覆盖安装、插件市场更新、`git pull` 都不会碰这两处，升级后原样继续用。
+**不用。** 所有运行数据都存在插件目录之外的 `data/plugin_data/QQGroupmgr/`（封禁列表、各类文本、开关、自定义敏感词、文件仓库、更新日志、问题报告），后台面板里的配置项由 AstrBot 存在 `data/config/` 下。覆盖安装、插件市场更新、`git pull` 都不会碰这两处，升级后原样继续用。
 
-额外保险：插件检测到版本号变化时，会先把数据目录里的 `*.json` 快照到 `data/plugin_data/ZM-QQGroupmgr/backups/<旧版本>-<时间戳>/`。真遇到新版本写坏老数据，把这个目录里的文件拷回上一层即可。
+额外保险：插件检测到版本号变化时，会先把数据目录里的 `*.json` 快照到 `data/plugin_data/QQGroupmgr/backups/<旧版本>-<时间戳>/`。真遇到新版本写坏老数据，把这个目录里的文件拷回上一层即可。
 
 数据文件读取失败（比如手改时多打了一个逗号）时，原文件会改名保留为 `<文件名>.corrupt-<时间戳>`。恢复时请**先停用插件或关闭 AstrBot**，修好后改回原名（覆盖同名文件），再启用；插件运行中放回去会被覆盖。
 

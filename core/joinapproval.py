@@ -126,7 +126,7 @@ class ShaCache:
         if not sha:
             # 拉取失败时宁可用旧值：GitHub 偶发 5xx 不该让整群卡住
             if cached:
-                logger.warning(f"[ZM-QQGroupmgr] {repo} sha 刷新失败（{error}），沿用缓存")
+                logger.warning(f"[QQGroupmgr] {repo} sha 刷新失败（{error}），沿用缓存")
                 return cached[1], ""
             return "", error
         self._items[repo] = (time.time(), sha)
@@ -142,7 +142,7 @@ async def _fetch_latest_sha(repo: str) -> Tuple[str, str]:
     url = f"https://api.github.com/repos/{repo}/commits?per_page=1"
     headers = {
         "Accept": "application/vnd.github+json",
-        "User-Agent": "ZM-QQGroupmgr",
+        "User-Agent": "QQGroupmgr",
     }
     try:
         timeout = aiohttp.ClientTimeout(total=20)

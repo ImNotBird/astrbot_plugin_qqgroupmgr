@@ -1,4 +1,4 @@
-"""ZM-QQGroupmgr - 功能强大的 QQ 群管理插件
+"""QQGroupmgr - 功能强大的 QQ 群管理插件
 
 作者: ZM
 所有管理命令均限制为 AstrBot 管理员可用。
@@ -93,8 +93,8 @@ from .core.utils import (
     truncate,
 )
 
-PLUGIN_NAME = "ZM-QQGroupmgr"
-PLUGIN_VERSION = "1.0.8"
+PLUGIN_NAME = "QQGroupmgr"
+PLUGIN_VERSION = "1.0.9"
 
 
 
@@ -309,14 +309,14 @@ class ZMQQGroupmgr(Star):
         """插件加载后启动文件下载服务。"""
         made = backup_on_upgrade(PLUGIN_VERSION)
         if made:
-            logger.info(f"[ZM-QQGroupmgr] 升级前数据已备份到 {made}")
+            logger.info(f"[QQGroupmgr] 升级前数据已备份到 {made}")
 
         if self.config.get("file_server_enabled", True):
             # 强制使用 0.0.0.0 以避免云服务器绑定问题
             configured_host = str(self.config.get("file_host") or "0.0.0.0")
             # 云服务器无法直接绑定公网IP，强制使用 0.0.0.0
             if configured_host not in ("0.0.0.0", "127.0.0.1", "localhost"):
-                logger.warning(f"[ZM-QQGroupmgr] 检测到公网IP配置 {configured_host}，自动改为 0.0.0.0")
+                logger.warning(f"[QQGroupmgr] 检测到公网IP配置 {configured_host}，自动改为 0.0.0.0")
                 configured_host = "0.0.0.0"
 
             port = coerce_int(self.config.get("file_port"), 9977)
@@ -326,17 +326,17 @@ class ZMQQGroupmgr(Star):
 
             # 如果仍然失败，最后尝试回退到 0.0.0.0
             if error and "could not bind" in str(error) and configured_host != "0.0.0.0":
-                logger.warning(f"[ZM-QQGroupmgr] 配置的地址 {configured_host} 不可用，尝试使用 0.0.0.0")
+                logger.warning(f"[QQGroupmgr] 配置的地址 {configured_host} 不可用，尝试使用 0.0.0.0")
                 self.server = DownloadServer(self.files, host="0.0.0.0", port=port)
                 error = await self.server.start()
 
             if error:
-                logger.warning(f"[ZM-QQGroupmgr] {error}")
+                logger.warning(f"[QQGroupmgr] {error}")
 
             # 0.0.0.0 只是监听地址，直接写进下载链接的话谁都打不开
             if "0.0.0.0" in self.files.base_url():
                 logger.warning(
-                    "[ZM-QQGroupmgr] 下载链接当前会生成 http://0.0.0.0:%s，外部无法访问；"
+                    "[QQGroupmgr] 下载链接当前会生成 http://0.0.0.0:%s，外部无法访问；"
                     "请在插件配置 file_base_url 填写实际可访问的地址（如 http://公网IP:%s）"
                     % (port, port)
                 )
@@ -367,7 +367,7 @@ class ZMQQGroupmgr(Star):
             self.draws_store,
         ):
             await store.save()
-        logger.info("[ZM-QQGroupmgr] 插件已卸载")
+        logger.info("[QQGroupmgr] 插件已卸载")
 
     # ------------------------------------------------------------------
     # 通用辅助
@@ -456,7 +456,7 @@ class ZMQQGroupmgr(Star):
                 await api.mute(int(group_id), int(user_id), chunk_duration(duration))
                 await self.mutes.record(group_id, user_id, duration, reason, "自动检测")
             except RuntimeError as exc:
-                logger.warning(f"[ZM-QQGroupmgr] 自动禁言失败: {exc}")
+                logger.warning(f"[QQGroupmgr] 自动禁言失败: {exc}")
 
     async def _bot_role(self, api: OneBotApi, group_id: str, event: AstrMessageEvent) -> str:
         """机器人在该群的身份：owner / admin / member。"""
@@ -494,7 +494,7 @@ class ZMQQGroupmgr(Star):
 
             await self.context.send_message(origin, MessageChain().message(text))
         except Exception as exc:
-            logger.warning(f"[ZM-QQGroupmgr] 主动发送消息失败: {exc}")
+            logger.warning(f"[QQGroupmgr] 主动发送消息失败: {exc}")
 
     async def _expire_pending(
         self, origin: str, key: str, token: str, delay: int, label: str
@@ -596,7 +596,7 @@ class ZMQQGroupmgr(Star):
                 if platform.meta().name == "aiocqhttp"
             ]
         except Exception as exc:
-            logger.debug(f"[ZM-QQGroupmgr] 获取 aiocqhttp client 失败: {exc}")
+            logger.debug(f"[QQGroupmgr] 获取 aiocqhttp client 失败: {exc}")
             return []
 
     def _bg_api(self) -> Optional[OneBotApi]:
@@ -636,7 +636,7 @@ class ZMQQGroupmgr(Star):
                 try:
                     await job()
                 except Exception as exc:  # 一件事出错不能耽误另外几件，也不能让循环停掉
-                    logger.warning(f"[ZM-QQGroupmgr] 后台任务 {job.__name__} 异常: {exc}")
+                    logger.warning(f"[QQGroupmgr] 后台任务 {job.__name__} 异常: {exc}")
 
     async def _renew_long_mutes(self) -> None:
         """超过 30 天的禁言到点续期。"""
@@ -658,13 +658,13 @@ class ZMQQGroupmgr(Star):
                     item["group_id"], item["user_id"]
                 )
                 logger.warning(
-                    f"[ZM-QQGroupmgr] 续期禁言 {item['user_id']}@{item['group_id']} 失败: {exc}"
+                    f"[QQGroupmgr] 续期禁言 {item['user_id']}@{item['group_id']} 失败: {exc}"
                     + ("，已放弃这条记录（成员可能已退群）" if gave_up else "，5 分钟后重试")
                 )
                 continue
             await self.mutes.mark_renewed(item["group_id"], item["user_id"])
             logger.info(
-                f"[ZM-QQGroupmgr] 已为 {item['user_id']}@{item['group_id']} 续期禁言，"
+                f"[QQGroupmgr] 已为 {item['user_id']}@{item['group_id']} 续期禁言，"
                 f"剩余 {format_duration(item['remaining'])}"
             )
 
@@ -697,7 +697,7 @@ class ZMQQGroupmgr(Star):
                 continue
             sha, error = await self._sha_cache.latest(repo, ttl=interval, force=True)
             if not sha:
-                logger.warning(f"[ZM-QQGroupmgr] 群 {group_id} 刷新 sha 失败: {error}")
+                logger.warning(f"[QQGroupmgr] 群 {group_id} 刷新 sha 失败: {error}")
                 continue
             if sha == state.get("answer"):
                 continue
@@ -708,11 +708,11 @@ class ZMQQGroupmgr(Star):
                 sha,
             )
             if not ok:
-                logger.warning(f"[ZM-QQGroupmgr] 群 {group_id} 更新加群答案失败: {why}")
+                logger.warning(f"[QQGroupmgr] 群 {group_id} 更新加群答案失败: {why}")
                 continue
             state["answer"] = sha
             await self.settings.save()
-            logger.info(f"[ZM-QQGroupmgr] 群 {group_id} 加群答案已更新为 {sha[:7]}")
+            logger.info(f"[QQGroupmgr] 群 {group_id} 加群答案已更新为 {sha[:7]}")
 
 
     async def _remind_reports(self) -> None:
@@ -788,7 +788,7 @@ class ZMQQGroupmgr(Star):
             if account is None:  # 没连着不算开奖失败，等多久都行
                 if self_id not in self._draw_offline:
                     self._draw_offline.add(self_id)
-                    logger.warning(f"[ZM-QQGroupmgr] 账号 {self_id} 未连接，到点的抽奖等它连上后开奖")
+                    logger.warning(f"[QQGroupmgr] 账号 {self_id} 未连接，到点的抽奖等它连上后开奖")
                 continue
             self._draw_offline.discard(self_id)
             # 等协议端或开上一条的时候，这条可能已被取消
@@ -812,11 +812,11 @@ class ZMQQGroupmgr(Star):
             return
         if self.draws.retry_later(draw, time.time()):
             await self.draws_store.save()
-            logger.warning(f"[ZM-QQGroupmgr] 群 {group_id} 抽奖「{name}」开奖失败（{failure}），稍后重试")
+            logger.warning(f"[QQGroupmgr] 群 {group_id} 抽奖「{name}」开奖失败（{failure}），稍后重试")
             return
         await self.draws.remove(group_id, name)
         logger.error(
-            f"[ZM-QQGroupmgr] 群 {group_id} 抽奖「{name}」多次开奖失败（{failure}），已放弃。"
+            f"[QQGroupmgr] 群 {group_id} 抽奖「{name}」多次开奖失败（{failure}），已放弃。"
             f"已公布 {coerce_int(draw.get('announced'), 0)} 人，"
             f"未通报的中奖者: {draw.get('winners') or '无'}"
         )
@@ -864,7 +864,7 @@ class ZMQQGroupmgr(Star):
         finally:
             self._announcing = None
         logger.info(
-            f"[ZM-QQGroupmgr] 群 {group_id} 抽奖「{name}」已开奖，中奖 {draw['announced']} 人"
+            f"[QQGroupmgr] 群 {group_id} 抽奖「{name}」已开奖，中奖 {draw['announced']} 人"
         )
         return ""
 
@@ -1091,7 +1091,7 @@ class ZMQQGroupmgr(Star):
         try:
             await api.mute_all(int(group_id), False)
         except RuntimeError as exc:
-            logger.warning(f"[ZM-QQGroupmgr] 自动解除全体禁言失败: {exc}")
+            logger.warning(f"[QQGroupmgr] 自动解除全体禁言失败: {exc}")
             return
 
         state.pop("muteall_until", None)
@@ -1377,13 +1377,13 @@ class ZMQQGroupmgr(Star):
             repo = str(state.get("repo") or "")
             if not repo:
                 # 没仓库就永远没有正确答案，这是配置坏了，不能拿新成员撒气
-                logger.warning(f"[ZM-QQGroupmgr] 群 {group_id} 选了 sha 却没有仓库，跳过验证")
+                logger.warning(f"[QQGroupmgr] 群 {group_id} 选了 sha 却没有仓库，跳过验证")
                 return
             code, error = await self._sha_cache.latest(repo, ttl=self._poll_minutes() * 60)
             if not code:
                 # 取不到也照常挂验证：成员发来的 sha 会当场再问一次 GitHub，
                 # 到点还没发对就照踢，不能因为 GitHub 抽风就放人进来
-                logger.warning(f"[ZM-QQGroupmgr] 群 {group_id} 取 sha 失败: {error}")
+                logger.warning(f"[QQGroupmgr] 群 {group_id} 取 sha 失败: {error}")
             template = str(self.config.get("join_sha_tip") or DEFAULT_JOIN_SHA_TIP)
             message = render_cq(
                 template,
@@ -1446,7 +1446,7 @@ class ZMQQGroupmgr(Star):
         try:
             await api.kick(int(group_id), int(user_id))
         except RuntimeError as exc:
-            logger.warning(f"[ZM-QQGroupmgr] 验证超时踢出 {user_id} 失败: {exc}")
+            logger.warning(f"[QQGroupmgr] 验证超时踢出 {user_id} 失败: {exc}")
             return
 
         template = str(self.config.get("join_timeout_tip") or DEFAULT_JOIN_TIMEOUT_TIP)
@@ -1463,7 +1463,7 @@ class ZMQQGroupmgr(Star):
                 },
             ),
         )
-        logger.info(f"[ZM-QQGroupmgr] 群 {group_id} 成员 {user_id} 验证超时，已踢出")
+        logger.info(f"[QQGroupmgr] 群 {group_id} 成员 {user_id} 验证超时，已踢出")
 
     async def _kick_wrong_sha(self, api: OneBotApi, group_id: str, user_id: str) -> None:
         """sha 连错 MAX_SHA_TRIES 次，不等超时直接踢。"""
@@ -1471,14 +1471,14 @@ class ZMQQGroupmgr(Star):
         try:
             await api.kick(int(group_id), int(user_id))
         except RuntimeError as exc:
-            logger.warning(f"[ZM-QQGroupmgr] 连错踢出 {user_id} 失败: {exc}")
+            logger.warning(f"[QQGroupmgr] 连错踢出 {user_id} 失败: {exc}")
             return
         await api.send_group_msg(
             int(group_id),
             f"{escape_cq(name)}（{user_id}）连续 {MAX_SHA_TRIES} 次验证失败，已踢出",
         )
         logger.info(
-            f"[ZM-QQGroupmgr] 群 {group_id} 成员 {user_id} 连错 {MAX_SHA_TRIES} 次，已踢出"
+            f"[QQGroupmgr] 群 {group_id} 成员 {user_id} 连错 {MAX_SHA_TRIES} 次，已踢出"
         )
 
     async def _verify_matches(self, pending: dict, text: str) -> bool:
@@ -1520,7 +1520,7 @@ class ZMQQGroupmgr(Star):
         self._pending_verify.pop(key, None)
         tip = str(self.config.get("join_pass_tip") or DEFAULT_JOIN_PASS_TIP)
         await api.send_group_msg(int(group_id), self._render(tip, event))
-        logger.info(f"[ZM-QQGroupmgr] 群 {group_id} 成员 {user_id} 验证通过")
+        logger.info(f"[QQGroupmgr] 群 {group_id} 成员 {user_id} 验证通过")
         event.stop_event()
         return True
 
@@ -1954,7 +1954,7 @@ class ZMQQGroupmgr(Star):
             f"当前冷却时长: {'不限制' if cooldown <= 0 else format_duration(cooldown)}"
         )
         logger.info(
-            f"[ZM-QQGroupmgr] {event.get_sender_id()} 重置了 {', '.join(targets)} 的下载冷却"
+            f"[QQGroupmgr] {event.get_sender_id()} 重置了 {', '.join(targets)} 的下载冷却"
         )
         yield event.plain_result("\n".join(lines))
 
@@ -2081,7 +2081,7 @@ class ZMQQGroupmgr(Star):
             try:
                 path = await file_component.get_file()
             except Exception as exc:
-                logger.error(f"[ZM-QQGroupmgr] 获取文件失败: {exc}")
+                logger.error(f"[QQGroupmgr] 获取文件失败: {exc}")
 
         if not path or not Path(str(path)).exists():
             await event.send(event.plain_result(f"未能获取文件「{pending['name']}」的本地路径，上传失败"))
@@ -2101,14 +2101,14 @@ class ZMQQGroupmgr(Star):
                 # 群主同样有权删群文件，顺手清理，失败不影响结果
                 await self._delete_group_file(api, group_id_str, file_component)
                 cleanup = "\n已撤回群内的文件消息"
-                logger.info(f"[ZM-QQGroupmgr] 机器人是群主，已撤回群 {group_id_str} 的上传消息")
+                logger.info(f"[QQGroupmgr] 机器人是群主，已撤回群 {group_id_str} 的上传消息")
             elif bot_role == "admin":
                 if not await self._delete_group_file(api, group_id_str, file_component):
                     await event.send(event.plain_result("上传失败：删除群文件失败，请手动删除后重试"))
                     event.stop_event()
                     return
                 cleanup = "\n已删除群文件中的该文件"
-                logger.info(f"[ZM-QQGroupmgr] 机器人是群管理员，已删除群 {group_id_str} 的群文件")
+                logger.info(f"[QQGroupmgr] 机器人是群管理员，已删除群 {group_id_str} 的群文件")
             else:
                 await event.send(
                     event.plain_result(
@@ -2140,7 +2140,7 @@ class ZMQQGroupmgr(Star):
             or getattr(file_component, "id", None)
         )
         if not file_id:
-            logger.warning("[ZM-QQGroupmgr] 未能取得群文件 file_id，无法删除群文件")
+            logger.warning("[QQGroupmgr] 未能取得群文件 file_id，无法删除群文件")
             return False
 
         # 用 try_ok 而不是"返回值非 None"：delete_group_file 成功时 data 就是
@@ -2238,7 +2238,7 @@ class ZMQQGroupmgr(Star):
             return
 
         logger.info(
-            f"[ZM-QQGroupmgr] {event.get_sender_id()} 在群 {group_id} 构造合并转发「{title}」"
+            f"[QQGroupmgr] {event.get_sender_id()} 在群 {group_id} 构造合并转发「{title}」"
             f"，共 {len(entries)} 条"
         )
 
@@ -2347,9 +2347,9 @@ class ZMQQGroupmgr(Star):
         if user_id in self._ban_list(group_id):
             try:
                 await api.kick(int(group_id), int(user_id), reject=True)
-                logger.info(f"[ZM-QQGroupmgr] 封禁用户 {user_id} 在群 {group_id} 发言，已踢出")
+                logger.info(f"[QQGroupmgr] 封禁用户 {user_id} 在群 {group_id} 发言，已踢出")
             except RuntimeError as exc:
-                logger.warning(f"[ZM-QQGroupmgr] 踢出封禁用户失败: {exc}")
+                logger.warning(f"[QQGroupmgr] 踢出封禁用户失败: {exc}")
             event.stop_event()
             return
 
@@ -2387,7 +2387,7 @@ class ZMQQGroupmgr(Star):
             ),
         )
         logger.info(
-            f"[ZM-QQGroupmgr] 群 {group_id} 成员 {user_id} 触发广告拦截（评分 {score}）"
+            f"[QQGroupmgr] 群 {group_id} 成员 {user_id} 触发广告拦截（评分 {score}）"
         )
         event.stop_event()
         return True
@@ -2415,7 +2415,7 @@ class ZMQQGroupmgr(Star):
         )
         await api.send_group_msg(int(group_id), message)
         logger.info(
-            f"[ZM-QQGroupmgr] 群 {group_id} 成员 {user_id} 命中敏感词「{word}」"
+            f"[QQGroupmgr] 群 {group_id} 成员 {user_id} 命中敏感词「{word}」"
             f"，已撤回并禁言 {duration} 秒"
         )
         event.stop_event()
@@ -2458,7 +2458,7 @@ class ZMQQGroupmgr(Star):
             duration="永久" if duration == 0 else format_duration(duration),
         )
         await api.send_group_msg(int(group_id), message)
-        logger.info(f"[ZM-QQGroupmgr] 群 {group_id} 成员 {user_id} 触发刷屏检测: {reason}")
+        logger.info(f"[QQGroupmgr] 群 {group_id} 成员 {user_id} 触发刷屏检测: {reason}")
         event.stop_event()
         return True
 
@@ -2509,16 +2509,16 @@ class ZMQQGroupmgr(Star):
                 await self.mutes.record(group_id, user_id, duration, f"名片违规: {reason}", "自动检测")
                 message += f"\n已禁言 {format_duration(duration)}"
             except RuntimeError as exc:
-                logger.warning(f"[ZM-QQGroupmgr] 名片违规禁言失败: {exc}")
+                logger.warning(f"[QQGroupmgr] 名片违规禁言失败: {exc}")
         elif action == "kick":
             try:
                 await api.kick(int(group_id), int(user_id))
                 message += "\n已移出本群"
             except RuntimeError as exc:
-                logger.warning(f"[ZM-QQGroupmgr] 名片违规踢出失败: {exc}")
+                logger.warning(f"[QQGroupmgr] 名片违规踢出失败: {exc}")
 
         await api.send_group_msg(int(group_id), message)
-        logger.info(f"[ZM-QQGroupmgr] 群 {group_id} 成员 {user_id} 名片违规: {reason}")
+        logger.info(f"[QQGroupmgr] 群 {group_id} 成员 {user_id} 名片违规: {reason}")
 
     # ------------------------------------------------------------------
     # 成员管理（踢出 / 封禁 / 管理员 / 头衔）
@@ -2640,7 +2640,7 @@ class ZMQQGroupmgr(Star):
             try:
                 await api.kick(int(group_id), int(user_id), reject=True)
             except RuntimeError as exc:
-                logger.warning(f"[ZM-QQGroupmgr] 封禁踢出失败 {user_id}: {exc}")
+                logger.warning(f"[QQGroupmgr] 封禁踢出失败 {user_id}: {exc}")
         await self.settings.save()
         yield event.plain_result(
             f"已封禁 {len(added)} 人: {', '.join(added)}\n后续加群申请将被自动拒绝"
@@ -2864,11 +2864,11 @@ class ZMQQGroupmgr(Star):
 
         total = len(pending)
         logger.info(
-            f"[ZM-QQGroupmgr] 群 {group_id} 批量撤回：来源 {source}，"
+            f"[QQGroupmgr] 群 {group_id} 批量撤回：来源 {source}，"
             f"目标 {total} 条，成功 {removed} 条，失败 {len(failures)} 条"
         )
         for line in failures:
-            logger.warning(f"[ZM-QQGroupmgr] 群 {group_id} 撤回失败 {line}")
+            logger.warning(f"[QQGroupmgr] 群 {group_id} 撤回失败 {line}")
 
         if not failures:
             yield event.plain_result(f"已撤回 {removed} 条消息")
@@ -3155,7 +3155,7 @@ class ZMQQGroupmgr(Star):
                 failed.append(f"{group_id}({truncate(str(exc), 30)})")
 
         logger.info(
-            f"[ZM-QQGroupmgr] {event.get_sender_id()} 将 {len(succeeded)} 个群改名为「{name}」"
+            f"[QQGroupmgr] {event.get_sender_id()} 将 {len(succeeded)} 个群改名为「{name}」"
         )
         yield event.plain_result(
             self._batch_report(f"群名称已改为「{name}」", succeeded, failed)
@@ -3236,7 +3236,7 @@ class ZMQQGroupmgr(Star):
             lines.append("提示: 部分协议端即使返回成功也可能被腾讯侧拒绝，请自行确认效果")
 
         logger.info(
-            f"[ZM-QQGroupmgr] {event.get_sender_id()} 为 {len(succeeded)} 个群更换了头像"
+            f"[QQGroupmgr] {event.get_sender_id()} 为 {len(succeeded)} 个群更换了头像"
         )
         yield event.plain_result("\n".join(lines))
 
@@ -3345,7 +3345,7 @@ class ZMQQGroupmgr(Star):
             if recall:
                 lines.append(recall)
 
-        logger.info(f"[ZM-QQGroupmgr] {event.get_sender_id()} 在群 {group_id} 发布了公告")
+        logger.info(f"[QQGroupmgr] {event.get_sender_id()} 在群 {group_id} 发布了公告")
         yield event.plain_result("\n".join(lines))
 
     # ------------------------------------------------------------------
@@ -3682,9 +3682,9 @@ class ZMQQGroupmgr(Star):
         if user_id in self._ban_list(group_id):
             try:
                 await api.kick(int(group_id), int(user_id), reject=True)
-                logger.info(f"[ZM-QQGroupmgr] 封禁用户 {user_id} 尝试加入群 {group_id}，已自动踢出")
+                logger.info(f"[QQGroupmgr] 封禁用户 {user_id} 尝试加入群 {group_id}，已自动踢出")
             except RuntimeError as exc:
-                logger.warning(f"[ZM-QQGroupmgr] 踢出封禁用户失败: {exc}")
+                logger.warning(f"[QQGroupmgr] 踢出封禁用户失败: {exc}")
             event.stop_event()
             return
 
@@ -3727,7 +3727,7 @@ class ZMQQGroupmgr(Star):
         # 人已经不在群里，报告没法再回复，连同历史一起清掉
         removed = await self.reports.remove_user(group_id, user_id)
         if removed:
-            logger.info(f"[ZM-QQGroupmgr] {user_id} 已离开群 {group_id}，删除其 {removed} 条报告")
+            logger.info(f"[QQGroupmgr] {user_id} 已离开群 {group_id}，删除其 {removed} 条报告")
         await self.draws.drop_member(group_id, user_id)
 
         state = self._farewell(group_id)
@@ -3767,7 +3767,7 @@ class ZMQQGroupmgr(Star):
                 # base64 字符集里没有 , [ ]，可以直接拼进 CQ 码
                 message += f"[CQ:image,file={to_base64_uri(data)}]"
             except OSError as exc:
-                logger.warning(f"[ZM-QQGroupmgr] 读取退群提示图片失败: {exc}")
+                logger.warning(f"[QQGroupmgr] 读取退群提示图片失败: {exc}")
 
         if message:
             await api.send_group_msg(int(group_id), message)
@@ -4148,7 +4148,7 @@ class ZMQQGroupmgr(Star):
         reply = f"抽奖「{name}」已取消"
         if draw.get("announced"):
             pending = draw.get("winners") or []
-            logger.info(f"[ZM-QQGroupmgr] 群 {target} 抽奖「{name}」被管理员取消，未通报的中奖者: {pending}")
+            logger.info(f"[QQGroupmgr] 群 {target} 抽奖「{name}」被管理员取消，未通报的中奖者: {pending}")
             reply += f"\n此前已公布 {draw['announced']} 人，未公布的 {len(pending)} 人不再通报"
         yield event.plain_result(reply)
 
@@ -4157,9 +4157,9 @@ class ZMQQGroupmgr(Star):
     # ------------------------------------------------------------------
 
     @filter.permission_type(filter.PermissionType.ADMIN)
-    @filter.command("zmhelp", alias={"群管帮助"})
+    @filter.command("groupmgr_help", alias={"群管帮助"})
     async def cmd_help(self, event: AstrMessageEvent):
-        """/zmhelp - 查看全部命令"""
+        """/groupmgr_help - 查看全部命令"""
         title = f"{PLUGIN_NAME} v{PLUGIN_VERSION}"
         text = self._help_text()
 
@@ -4286,6 +4286,6 @@ class ZMQQGroupmgr(Star):
             "/kill <成员> <理由>              赛博击杀播报\n"
             "/slimefinder <version> <seed>   史莱姆区块（缩写 /sf，全体可用）\n"
 
-            "/zmhelp                         本帮助（缩写 /群管帮助）\n\n"
+            "/groupmgr_help                         本帮助（缩写 /群管帮助）\n\n"
             "时长单位: s 秒 / m 分钟 / h 小时 / d 天"
         )

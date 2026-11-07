@@ -63,7 +63,7 @@ class FileRepository:
         """取条目对应的文件路径。
 
         ``path`` 存的是上传当时的绝对路径，数据目录改过名（1.0.5 的
-        ZM-QQManager → ZM-QQGroupmgr）或整个 AstrBot 目录被搬走之后，
+        ZM-QQManager → QQGroupmgr）或整个 AstrBot 目录被搬走之后，
         老条目里的绝对路径就指向不存在的地方了。这里在原路径失效时
         按文件名回落到当前仓库目录，避免已上传的文件集体失联。
         """
@@ -139,7 +139,7 @@ class FileRepository:
         try:
             await asyncio.to_thread(shutil.copy2, str(source), str(target))
         except Exception as exc:
-            logger.error(f"[ZM-QQGroupmgr] 保存上传文件失败: {exc}")
+            logger.error(f"[QQGroupmgr] 保存上传文件失败: {exc}")
             return False, f"保存文件失败: {exc}"
 
         entries = self._entries()
@@ -180,7 +180,7 @@ class FileRepository:
             try:
                 await asyncio.to_thread(path.unlink)
             except Exception as exc:
-                logger.warning(f"[ZM-QQGroupmgr] 删除文件失败: {exc}")
+                logger.warning(f"[QQGroupmgr] 删除文件失败: {exc}")
 
         entries.pop(name, None)
         tokens = self._tokens()

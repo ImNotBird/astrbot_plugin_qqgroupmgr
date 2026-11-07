@@ -42,7 +42,7 @@ class OneBotApi:
         try:
             return await self.client.api.call_action(action, **self.route, **payload)
         except Exception as exc:
-            logger.error(f"[ZM-QQGroupmgr] 调用 {action} 失败: {exc}")
+            logger.error(f"[QQGroupmgr] 调用 {action} 失败: {exc}")
             raise RuntimeError(str(exc)) from exc
 
     async def try_call(self, action: str, **payload: Any) -> Optional[Any]:

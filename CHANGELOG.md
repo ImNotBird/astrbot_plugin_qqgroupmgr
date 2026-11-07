@@ -1,5 +1,14 @@
 # 更新日志
 
+## [1.0.9] - 2026-11-07
+
+### 🔄 插件重命名与命令统一
+
+- 插件标识由 `ZM-QQGroupmgr` 统一改为 `QQGroupmgr`：`PLUGIN_NAME`、`display_name`、`PLUGIN_DIR_NAME`、日志标签、User-Agent、数据目录名等全部更名。
+- 指令 `/zmhelp` 重命名为 `/groupmgr_help`（别名 `群管帮助` 保留），后台配置项 `help_menu_text` 的说明随之同步。
+- 合并转发卡片标题由 `ZM-QQGroupmgr v<版本号>` 改为 `QQGroupmgr v<版本号>`。
+- 删除了逻辑有问题的更新提示：移除了 `_check_update` 定时检查、`/update on|off` 指令，以及配置项 `update_check_days`、`update_tip`；不再向群发合并转发更新提醒。
+
 ## [1.0.8] - 2026-11-05
 
 ### ✨ 新增：问题反馈管理指令

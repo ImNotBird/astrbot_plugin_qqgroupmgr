@@ -1,1 +1,1 @@
-"""ZM-QQGroupmgr 内部模块。"""
+"""QQGroupmgr 内部模块。"""
