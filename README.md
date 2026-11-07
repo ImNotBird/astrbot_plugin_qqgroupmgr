@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/ZomebieMask/astrbot_plugin_qqgroupmgr/main/logo.png" width="110" alt="QQGroupmgr" />
+<img src="https://raw.githubusercontent.com/ImNotBird/astrbot_plugin_qqgroupmgr/main/logo.png" width="110" alt="QQGroupmgr" />
 
 # QQGroupmgr
 
