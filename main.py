@@ -1,6 +1,6 @@
 """QQGroupmgr - 功能强大的 QQ 群管理插件
 
-作者: ZM
+作者: ImNotBird
 所有管理命令均限制为 AstrBot 管理员可用。
 """
 from __future__ import annotations
@@ -251,7 +251,7 @@ def _find_slime_chunks(seed: int, search_range: int) -> List[tuple]:
     return found
 
 
-@register("astrbot_plugin_qqgroupmgr", "ZM", "功能全面的 QQ 群管理插件", PLUGIN_VERSION,
+@register("astrbot_plugin_qqgroupmgr", "ImNotBird", "功能全面的 QQ 群管理插件", PLUGIN_VERSION,
           "https://github.com/ZomebieMask/astrbot_plugin_qqgroupmgr")
 class ZMQQGroupmgr(Star):
     """群管理插件主体。"""
