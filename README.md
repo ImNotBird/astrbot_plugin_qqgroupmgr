@@ -4,6 +4,8 @@
 
 # QQGroupmgr
 
+本插件修改自 [ZomebieMask/astrbot_plugin_zm_qqgroupmgr](https://github.com/ZomebieMask/astrbot_plugin_zm_qqgroupmgr)。
+
 ### 一个插件，顶十个 —— AstrBot 全能 QQ 群管理套件
 
 **33 组指令 · 12 大模块 · 从禁言踢人到进群审批、问题反馈、敏感词、刷屏、广告、文件分发、跨群批量操作，一站装完**

@@ -8,6 +8,7 @@
 - 指令 `/zmhelp` 重命名为 `/groupmgr_help`（别名 `群管帮助` 保留），后台配置项 `help_menu_text` 的说明随之同步。
 - 合并转发卡片标题由 `ZM-QQGroupmgr v<版本号>` 改为 `QQGroupmgr v<版本号>`。
 - 删除了逻辑有问题的更新提示：移除了 `_check_update` 定时检查、`/update on|off` 指令，以及配置项 `update_check_days`、`update_tip`；不再向群发合并转发更新提醒。
+- 本插件修改自 [ZomebieMask/astrbot_plugin_zm_qqgroupmgr](https://github.com/ZomebieMask/astrbot_plugin_zm_qqgroupmgr)。
 
 ## [1.0.8] - 2026-11-05
 
